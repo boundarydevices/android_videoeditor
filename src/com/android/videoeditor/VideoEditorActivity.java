@@ -1726,7 +1726,10 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             logd("Preview frame at: " + timeMs + " " + clear);
 
             // We only need to see the last frame
-            mQueue.clear();
+			// Bug fix for dead loop in waitting to STARTED when STOPPING state.
+			// If the queue cleared, startPreviewPlayback can't be run.
+			if (mPreviewState != PREVIEW_STATE_STOPPING)
+				mQueue.clear();
 
             mQueue.add(new Runnable() {
                 @Override
